@@ -172,7 +172,9 @@ module VagrantPlugins
           roles_path = guest_paths(@role_folders).first
           data_bags_path = guest_paths(@data_bags_folders).first
 
-          setup_config("provisioners/chef_solo/solo", "solo.rb", {
+          template = config.config_template || "provisioners/chef_solo/solo"
+
+          setup_config(template, "solo.rb", {
             :node_name => config.node_name,
             :provisioning_path => config.provisioning_path,
             :cookbooks_path => cookbooks_path,

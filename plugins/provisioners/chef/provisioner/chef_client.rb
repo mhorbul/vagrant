@@ -76,7 +76,8 @@ module VagrantPlugins
         end
 
         def setup_server_config
-          setup_config("provisioners/chef_client/client", "client.rb", {
+          template = config.config_template || "provisioners/chef_client/client"
+          setup_config(template, "client.rb", {
             :node_name => config.node_name,
             :chef_server_url => config.chef_server_url,
             :validation_client_name => config.validation_client_name,
