@@ -18,6 +18,7 @@ module VagrantPlugins
           attr_accessor :nfs
           attr_accessor :encrypted_data_bag_secret_key_path
           attr_accessor :encrypted_data_bag_secret
+          attr_accessor :config_template
 
           def encrypted_data_bag_secret; @encrypted_data_bag_secret || "/tmp/encrypted_data_bag_secret"; end
 
@@ -25,6 +26,12 @@ module VagrantPlugins
             super
 
             @__default = ["cookbooks", [:vm, "cookbooks"]]
+          end
+
+          # Provide defaults in such a way that they won't override the instance
+          # variable. This is so merging continues to work properly.
+          def config_template
+            @config_template || "provisioners/chef_solo/solo"
           end
 
           # Provide defaults in such a way that they won't override the instance
@@ -172,9 +179,7 @@ module VagrantPlugins
           roles_path = guest_paths(@role_folders).first
           data_bags_path = guest_paths(@data_bags_folders).first
 
-          template = config.config_template || "provisioners/chef_solo/solo"
-
-          setup_config(template, "solo.rb", {
+          setup_config(config.config_template, "solo.rb", {
             :node_name => config.node_name,
             :provisioning_path => config.provisioning_path,
             :cookbooks_path => cookbooks_path,

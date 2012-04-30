@@ -18,6 +18,7 @@ module VagrantPlugins
           attr_accessor :environment
           attr_accessor :encrypted_data_bag_secret_key_path
           attr_accessor :encrypted_data_bag_secret
+          attr_accessor :config_template
 
           # Provide defaults in such a way that they won't override the instance
           # variable. This is so merging continues to work properly.
@@ -26,6 +27,7 @@ module VagrantPlugins
           def file_cache_path; @file_cache_path || "/srv/chef/file_store"; end
           def file_backup_path; @file_backup_path || "/srv/chef/cache"; end
           def encrypted_data_bag_secret; @encrypted_data_bag_secret || "/tmp/encrypted_data_bag_secret"; end
+          def config_template; @config_template || "provisioners/chef_client/client"; end
 
           def validate(env, errors)
             super
@@ -76,8 +78,7 @@ module VagrantPlugins
         end
 
         def setup_server_config
-          template = config.config_template || "provisioners/chef_client/client"
-          setup_config(template, "client.rb", {
+          setup_config(config.config_template, "client.rb", {
             :node_name => config.node_name,
             :chef_server_url => config.chef_server_url,
             :validation_client_name => config.validation_client_name,
