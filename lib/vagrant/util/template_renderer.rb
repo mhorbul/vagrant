@@ -76,7 +76,7 @@ module Vagrant
       #
       # @return [String]
       def full_template_path
-        Vagrant.source_root.join('templates', "#{template}.erb").to_s.squeeze("/")
+        File.exist?(template) ? template : Vagrant.source_root.join('templates', "#{template}.erb").to_s.squeeze("/")
       end
     end
   end
